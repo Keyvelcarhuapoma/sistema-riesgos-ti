@@ -75,15 +75,15 @@ export default function DashboardPage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               <StatCard title="RIESGOS IDENTIFICADOS" value="24" subtitle="activos mapeados" trend="+3 este trimestre" />
               <StatCard title="CONTROLES IMPLEMENTADOS" value="88%" subtitle="de cobertura" progress={88} />
               <StatCard title="EXPOSICIÓN RESIDUAL" value="Moderado" subtitle="Umbral de tolerancia: 65/100" />
             </div>
 
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Formulario */}
-              <div className="col-span-2 bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+              <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-4 md:p-6 shadow-sm">
                 <div className="flex items-center gap-3 bg-red-50 text-red-700 p-3 rounded-lg border border-red-100 mb-6">
                   <AlertTriangle size={20} />
                   <div>
@@ -94,7 +94,7 @@ export default function DashboardPage() {
 
                 <div className="space-y-5">
                   {/* Buscador de API NIST */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 flex gap-3 items-end mb-4">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 flex flex-col md:flex-row gap-3 md:items-end mb-4">
                     <div className="flex-1">
                       <label className="block text-[11px] font-bold text-blue-800 uppercase tracking-wider mb-1">Importar desde NVD (API EE.UU.)</label>
                       <input type="text" placeholder="Ej: CVE-2021-44228" className="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value={cveId} onChange={e => setCveId(e.target.value)} />
@@ -108,7 +108,7 @@ export default function DashboardPage() {
                     <label className="block text-xs font-bold text-slate-700 mb-1">Título del Riesgo *</label>
                     <input type="text" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">Categoría</label>
                       <select className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
