@@ -5,6 +5,7 @@ import { AlertTriangle, LogOut, Activity, Search } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import RiskMatrix from '@/components/RiskMatrix';
 import ConfirmModal from '@/components/ConfirmModal';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function DashboardPage() {
   const [showModal, setShowModal] = useState(false);
@@ -154,7 +155,23 @@ export default function DashboardPage() {
       <ConfirmModal 
         isOpen={showModal} 
         onClose={() => setShowModal(false)} 
-        onConfirm={() => { alert('Guardado en BD!'); setShowModal(false); }} 
+        onConfirm={async () => { 
+          const { error } = await supabase.from('risks').insert([{
+            title: formData.title,
+            category: formData.category,
+            impact: formData.impact,
+            probability: formData.probability,
+            description: formData.description,
+            mitigation: formData.mitigation
+          }]);
+          if (error) {
+            alert('Error guardando en la BD: ' + error.message);
+          } else {
+            alert('¡Riesgo guardado de forma inmutable en Supabase PostgreSQL!'); 
+            setFormData({ title: '', category: 'Amenaza Cibernética', probability: 'Media (2)', impact: 'Medio (2)', description: '', mitigation: '' });
+            setShowModal(false); 
+          }
+        }} 
         formData={formData} 
       />
     </div>

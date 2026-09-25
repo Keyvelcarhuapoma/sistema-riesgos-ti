@@ -1,13 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Shield, Eye, Lock } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginPage() {
-  const handleLogin = (e: React.FormEvent) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login and redirect
-    window.location.href = '/dashboard';
+    setLoading(true);
+    
+    // Conexión real a Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert('Error de acceso: Credenciales inválidas o usuario no registrado.');
+    } else {
+      window.location.href = '/dashboard';
+    }
+    setLoading(false);
   };
 
   return (
@@ -28,7 +45,7 @@ export default function LoginPage() {
             <div>
               <label className="block text-sm font-semibold text-slate-700">Correo institucional</label>
               <div className="mt-1 relative">
-                <input type="email" required className="appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-slate-50" placeholder="usuario@corporativo.com" />
+                <input type="email" required className="appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-slate-50" placeholder="usuario@corporativo.com" value={email} onChange={e => setEmail(e.target.value)} />
               </div>
             </div>
 
@@ -38,7 +55,7 @@ export default function LoginPage() {
                 <a href="#" className="text-xs font-semibold text-blue-600 hover:text-blue-500">¿Olvidó su clave?</a>
               </div>
               <div className="mt-1 relative rounded-md shadow-sm">
-                <input type="password" required className="appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-slate-50" defaultValue="contraseñasegura" />
+                <input type="password" required className="appearance-none block w-full px-3 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-slate-50" placeholder="tu contraseña" value={password} onChange={e => setPassword(e.target.value)} />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
                   <Eye className="text-slate-400 hover:text-slate-600" size={18} />
                 </div>
@@ -54,8 +71,8 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md shadow-blue-200 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
-                Ingresar a la Consola &rarr;
+              <button type="submit" disabled={loading} className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md shadow-blue-200 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                {loading ? 'Verificando encriptación...' : 'Ingresar a la Consola \u2192'}
               </button>
             </div>
           </form>
