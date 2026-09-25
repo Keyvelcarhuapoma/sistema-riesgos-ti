@@ -1,14 +1,32 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import { Server, Database, Cloud, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 export default function ActivosPage() {
-  const activos = [
+  const [activos, setActivos] = useState([
     { id: 'SRV-DB-01', name: 'Clúster PostgreSQL Principal', type: 'Database', ip: '10.0.1.5', status: 'Operativo', crit: 'Extrema' },
     { id: 'SRV-WEB-02', name: 'Servidor Web Node.js', type: 'Server', ip: '10.0.2.10', status: 'Advertencia', crit: 'Alta' },
     { id: 'NET-FW-01', name: 'Firewall Perimetral DMZ', type: 'Network', ip: '192.168.1.1', status: 'Operativo', crit: 'Extrema' },
     { id: 'CLD-S3-04', name: 'AWS S3 Backups', type: 'Cloud', ip: 'N/A', status: 'Operativo', crit: 'Media' },
-  ];
+  ]);
+
+  const handleRegistrar = () => {
+    const nombreActivo = window.prompt("Ingresa el nombre del nuevo Activo TI (ej. Servidor de Correos):");
+    if (nombreActivo) {
+      const nuevoActivo = {
+        id: `NEW-${Math.floor(Math.random() * 1000)}`,
+        name: nombreActivo,
+        type: 'Server',
+        ip: '192.168.x.x',
+        status: 'Operativo',
+        crit: 'Alta'
+      };
+      setActivos([...activos, nuevoActivo]);
+      alert("¡Activo registrado correctamente en la CMDB local!");
+    }
+  };
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -32,7 +50,10 @@ export default function ActivosPage() {
               <h1 className="text-2xl font-bold text-slate-800">Inventario de Activos (CMDB)</h1>
               <p className="text-sm text-slate-500 mt-1">Gestión y clasificación de activos de información según ISO 27001.</p>
             </div>
-            <button className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-blue-700">
+            <button 
+              onClick={handleRegistrar}
+              className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-blue-700"
+            >
               + Registrar Activo
             </button>
           </div>
