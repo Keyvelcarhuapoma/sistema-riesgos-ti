@@ -12,19 +12,23 @@ export default function ActivosPage() {
     { id: 'CLD-S3-04', name: 'AWS S3 Backups', type: 'Cloud', ip: 'N/A', status: 'Operativo', crit: 'Media' },
   ]);
 
-  const handleRegistrar = () => {
-    const nombreActivo = window.prompt("Ingresa el nombre del nuevo Activo TI (ej. Servidor de Correos):");
-    if (nombreActivo) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newActivoName, setNewActivoName] = useState('');
+  const [newActivoType, setNewActivoType] = useState('Server');
+
+  const handleSaveActivo = () => {
+    if (newActivoName.trim()) {
       const nuevoActivo = {
         id: `NEW-${Math.floor(Math.random() * 1000)}`,
-        name: nombreActivo,
-        type: 'Server',
-        ip: '192.168.x.x',
+        name: newActivoName,
+        type: newActivoType,
+        ip: '192.168.100.x',
         status: 'Operativo',
         crit: 'Alta'
       };
       setActivos([...activos, nuevoActivo]);
-      alert("¡Activo registrado correctamente en la CMDB local!");
+      setIsModalOpen(false);
+      setNewActivoName('');
     }
   };
 
@@ -51,7 +55,7 @@ export default function ActivosPage() {
               <p className="text-sm text-slate-500 mt-1">Gestión y clasificación de activos de información según ISO 27001.</p>
             </div>
             <button 
-              onClick={handleRegistrar}
+              onClick={() => setIsModalOpen(true)}
               className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-blue-700"
             >
               + Registrar Activo
@@ -100,6 +104,37 @@ export default function ActivosPage() {
           </div>
         </main>
       </div>
+
+      {/* Modal Diseño */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center z-50">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <h3 className="font-bold text-slate-800">Registrar Nuevo Activo TI</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 text-xl leading-none">&times;</button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Nombre del Activo</label>
+                <input type="text" value={newActivoName} onChange={(e) => setNewActivoName(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm" placeholder="Ej. Servidor de Correos" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Tipo de Activo</label>
+                <select value={newActivoType} onChange={(e) => setNewActivoType(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white text-sm">
+                  <option value="Server">Servidor</option>
+                  <option value="Database">Base de Datos</option>
+                  <option value="Network">Red / Firewall</option>
+                  <option value="Cloud">Nube (Cloud)</option>
+                </select>
+              </div>
+            </div>
+            <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm font-semibold text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-100">Cancelar</button>
+              <button onClick={handleSaveActivo} className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700">Guardar Activo</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
