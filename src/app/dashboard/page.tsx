@@ -145,7 +145,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Componente importado */}
-              <RiskMatrix />
+              <RiskMatrix probability={formData.probability} impact={formData.impact} />
             </div>
           </div>
         </main>
